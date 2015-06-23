@@ -1,0 +1,11 @@
+<% if (!user) { %>
+	<h2>Welcome! Please <a href = '/login'>log in.</a></h2>
+
+<%= JSON.stringify(data)  %>
+
+<% } else { %>
+<%for(var i = 0 ; i< data.ids.length ; i++){%><%=data.ids[i]%> <%=i%><br><%}%>
+
+	<h2>Hello, <%= user.username %>.</h2>
+  <% for (item in user){%><pre><%=user[item]%></pre><%}%>
+<% } %>

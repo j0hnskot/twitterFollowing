@@ -1,0 +1,46 @@
+
+$("<style type='text/css'>
+	#twitterFollowersWindow{
+		color:#f00;
+		font-weight:bold;
+		font-size: 30px;
+		width:300px;
+		height:600px;
+		background: grey;
+		position: fixed;
+		top:0;
+
+
+
+	}
+
+button[follow-app-btn]{
+	border: solid 1px;
+	border-radius: 30px;
+	border-color: red;
+	font-size: 32px;
+	position:relative;
+	width:100%;
+
+
+
+}
+
+button[follow-app-btn]:hover{
+
+	border-color:black;
+	background-color:forestgreen;
+}
+
+</style>).appendTo('head');
+
+$('<div id="twitterFollowersWindow">
+
+	<button follow-app-btn="follow" onclick="follow()">Follow</button> <br>
+	<button follow-app-btn="findUnfollowers">UnFollow</button><br>
+	<button follow-app-btn="follow">Follow</button><br>
+
+
+
+</div>').appendTo('body');
+
