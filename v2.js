@@ -1,6 +1,13 @@
 const followDelay = 500;
 const debug = true;
 
+const userCellQuery = 'div [data-testid*="UserCell"]';
+const followerQuery = "//span[contains(., 'Follows you')]";
+const unfollowPopupQuery = "[data-testid='confirmationSheetConfirm']";
+const followButtonQuery = 'div [aria-label*="Follow "]';
+const alreadyFollowingQuery = 'div [aria-label*="Following @"]';
+const defaultTwitterImage = 'https://abs.twimg.com/sticky/default_profile_images/default_profile_bigger.png';
+
 start();
 
 async function start() {
@@ -11,7 +18,7 @@ async function follow() {
   await removeAlreadyFollowing();
   await removeAlreadyFollowed();
 
-  const toFollow = document.querySelectorAll('div [data-testid*="UserCell"]');
+  const toFollow = document.querySelectorAll(userCellQuery);
 
   if (toFollow.length === 0) {
     return;
@@ -19,10 +26,10 @@ async function follow() {
 
   for (const personDiv of toFollow) {
     await sleep(followDelay);
-    if (!debug) personDiv.querySelector('div [aria-label*="Follow "]').click();
+    if (!debug) personDiv.querySelector(followButtonQuery).click();
 
     const unfollowPopupOpen = document.querySelector(
-      "[data-testid='confirmationSheetConfirm']"
+      unfollowPopupQuery
     );
     if (unfollowPopupOpen) unfollowPopupOpen.click();
 
@@ -35,7 +42,7 @@ async function follow() {
 async function removeAlreadyFollowing() {
 
   const xPathResult = document.evaluate(
-    "//span[contains(., 'Follows you')]",
+    followerQuery,
     document,
     null,
     XPathResult.ANY_TYPE,
@@ -50,24 +57,24 @@ async function removeAlreadyFollowing() {
   }
 
   alreadyFollowing.forEach((e) => {
-    e.closest('div [data-testid*="UserCell"]').remove();
+    e.closest(userCellQuery).remove();
   });
-  
+
 }
 
 async function removeAlreadyFollowed() {
 
   let alreadyFollowed = document.querySelectorAll(
-    'div [aria-label*="Following @"]'
+    alreadyFollowingQuery
   );
   while (
     (alreadyFollowed = document.querySelectorAll(
-      'div [aria-label*="Following @"]'
+        alreadyFollowingQuery
     )) &&
     alreadyFollowed.length
   ) {
     for (const personDiv of alreadyFollowed) {
-      personDiv.closest('div [data-testid*="UserCell"]').remove();
+      personDiv.closest(userCellQuery).remove();
     }
 
     await sleep(1000);
