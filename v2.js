@@ -10,6 +10,8 @@ const alreadyFollowingQuery = 'div [aria-label*="Following @"]';
 const originalFollowingListQuery = 'div[data-testid*="-unfollow"]';
 const defaultTwitterImage = 'https://abs.twimg.com/sticky/default_profile_images/default_profile_bigger.png';
 
+let stopFollowing = false;
+
 createControlPanel();
 
 function createControlPanel(){
@@ -21,20 +23,27 @@ function createControlPanel(){
     const saveFollowingBtn = document.createElement("button"); 
     saveFollowingBtn.innerText = "Save Original Following List";
     saveFollowingBtn.onclick = saveOriginalFollowingList;
-    saveFollowingBtn.setAttribute('style', 'z-index: 9999; background-color: #fff; border: 1px solid #ccc; padding: 10px;');
+    saveFollowingBtn.setAttribute('style', 'background-color: #fff; border: 1px solid #ccc; padding: 10px;');
     panelDiv.appendChild(saveFollowingBtn);
 
-    const follow = document.createElement("button"); 
-    follow.innerText = "Start Following";
-    follow.onclick = start;
-    follow.setAttribute('style', 'position: fixed; bottom: 0; z-index: 9999; background-color: #fff; border: 1px solid #ccc; padding: 10px;');
-    panelDiv.appendChild(follow);
+    const followBtn = document.createElement("button"); 
+    followBtn.innerText = "Start Following";
+    followBtn.onclick = start;
+    followBtn.setAttribute('style', 'background-color: #fff; border: 1px solid #ccc; padding: 10px;');
+    panelDiv.appendChild(followBtn);
+
+    const stopBtn = document.createElement("button"); 
+    stopBtn.innerText = "Stop Following";
+    stopBtn.onclick = _ => { stopFollowing = true; };
+    stopBtn.setAttribute('style', 'background-color: #fff; border: 1px solid #ccc; padding: 10px;');
+    panelDiv.appendChild(stopBtn);
     
 }
     
 
 async function start() {
-  while (await follow());
+  while (await follow() && !stopFollowing);
+  stopFollowing = false; 
 }
 
 async function saveOriginalFollowingList() {
@@ -83,6 +92,8 @@ async function follow() {
 
   for (const personDiv of toFollow) {
     await sleep(followDelay);
+    if(stopFollowing) return false;
+    
     if (!debug) personDiv.querySelector(followButtonQuery).click();
 
     const unfollowPopupOpen = document.querySelector(
