@@ -17,7 +17,8 @@ async function start() {
 async function follow() {
   await removeAlreadyFollowing();
   await removeAlreadyFollowed();
-
+  removeInactive();
+  
   const toFollow = document.querySelectorAll(userCellQuery);
 
   if (toFollow.length === 0) {
@@ -80,6 +81,16 @@ async function removeAlreadyFollowed() {
     await sleep(1000);
   }
 
+}
+
+function removeInactive() {
+
+    const inactive = document.querySelectorAll('img[src*="' + defaultTwitterImage + '"]');
+
+
+    inactive.forEach((e) => {
+        e.closest(userCellQuery).remove();
+      });
 }
 
 async function sleep(ms) {
