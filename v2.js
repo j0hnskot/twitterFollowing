@@ -10,7 +10,28 @@ const alreadyFollowingQuery = 'div [aria-label*="Following @"]';
 const originalFollowingListQuery = 'div[data-testid*="-unfollow"]';
 const defaultTwitterImage = 'https://abs.twimg.com/sticky/default_profile_images/default_profile_bigger.png';
 
-start();
+createControlPanel();
+
+function createControlPanel(){
+    
+    const panelDiv = document.createElement('div');
+    panelDiv.setAttribute('style', 'position: fixed; bottom: 0; left: 0; width: 100%; height: 50px; background-color: #f5f5f5;');
+    document.body.appendChild(panelDiv);
+ 
+    const saveFollowingBtn = document.createElement("button"); 
+    saveFollowingBtn.innerText = "Save Original Following List";
+    saveFollowingBtn.onclick = saveOriginalFollowingList;
+    saveFollowingBtn.setAttribute('style', 'z-index: 9999; background-color: #fff; border: 1px solid #ccc; padding: 10px;');
+    panelDiv.appendChild(saveFollowingBtn);
+
+    const follow = document.createElement("button"); 
+    follow.innerText = "Start Following";
+    follow.onclick = start;
+    follow.setAttribute('style', 'position: fixed; bottom: 0; z-index: 9999; background-color: #fff; border: 1px solid #ccc; padding: 10px;');
+    panelDiv.appendChild(follow);
+    
+}
+    
 
 async function start() {
   while (await follow());
